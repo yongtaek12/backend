@@ -1,0 +1,32 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.mybatis.BoardMapper">
+    
+    <select id="findAll" resultType="BoardDto">
+        SELECT IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT
+        FROM BOARD
+    </select>
+
+    <update id="updateBoard">
+        update BOARD
+        set title=#{updateParam.TITLE},
+            AUTHOR=#{updateParam.AUTHOR},
+            CONTENTS=#{updateParam.CONTENTS}
+        where IDX = #{IDX}
+    </update>
+    
+    <select id="findById" resultType="BoardDto">
+        SELECT IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT
+        FROM BOARD
+        WHERE IDX = #{IDX}
+    </select>
+    
+    <delete id="deleteBoard">
+        DELETE FROM BOARD WHERE IDX = #{IDX}
+    </delete>
+
+    <insert id="saveBoard" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR,CREATED_AT)
+        VALUES (#{TITLE}, #{CONTENTS}, #{AUTHOR}, SYSDATE)
+    </insert>
+</mapper>
