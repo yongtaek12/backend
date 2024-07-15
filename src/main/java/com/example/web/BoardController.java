@@ -1,15 +1,14 @@
 package com.example.web;
 
+import com.example.model.PageInfo;
 import com.example.services.BoardService;
 import com.example.web.dtos.BoardDto;
 import com.example.web.dtos.BoardUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -21,26 +20,27 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board/list")
-    public List<BoardDto> boardList(Model model) {
-        System.out.println("-----------------------------------");
-        System.out.println("dddd" +boardService.findAll() );
-        return boardService.findAll();
+    public PageInfo<BoardDto> boardList(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
 
-
+        log.info("pageIndex ={}, pageSize={}",pageIndex, pageSize );
+        return boardService.findAll(pageIndex, pageSize);
     }
 
-    @GetMapping("/board/{id}")
-    public Optional<BoardDto> getBoard(@PathVariable String id) {
-        return boardService.findById(Long.parseLong(id));
+    @GetMapping("/board/{idx}")
+    public Optional<BoardDto> getBoard(@PathVariable(value = "idx") String idx) {
+        return boardService.findById(Long.parseLong(idx));
     }
 
     @PostMapping("/board")
-    public void insert(@RequestBody BoardDto boardDto) {
+    public BoardDto insert(@RequestBody BoardDto boardDto) {
          boardService.insert(boardDto);
+
+         log.info("controller {}", boardDto);
+         return boardDto;
     }
 
     @PatchMapping("/board")
-    public void update(@RequestBody BoardDto boardDto) {
+    public BoardDto update(@RequestBody BoardDto boardDto) {
          long idx = boardDto.getIdx();
          BoardUpdateDto boardUpdateDto = BoardUpdateDto.builder()
                         .author(boardDto.getAuthor())
@@ -48,10 +48,11 @@ public class BoardController {
                         .contents(boardDto.getContents())
                         .createdAt(boardDto.getCreatedAt()).build();
              boardService.update(idx, boardUpdateDto);
+             return boardDto;
     }
 
-    @DeleteMapping("/board/{id}")
-    public void delete(@PathVariable Long idx) {
+    @DeleteMapping("/board/{idx}")
+    public void delete(@PathVariable(value = "idx") Long idx) {
         boardService.delete(idx);
     }
     //API 연결테스트..

@@ -1,32 +1,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.repository.mybatis.BoardMapper">
-    
+    <!--리스트 조회-->
+
+<!--    <select id="findAll" resultType="BoardDto">-->
     <select id="findAll" resultType="BoardDto">
         SELECT IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT
         FROM BOARD
+        LIMIT ${limit} OFFSET #{offset}
     </select>
 
-    <update id="updateBoard">
+    <!-- 개수 -->
+    <select id="countBoards" resultType="int">
+        SELECT COUNT(*) AS board_count
+        FROM BOARD
+    </select>
+
+    <update id="updateBoard" keyProperty="idx">
         update BOARD
-        set title=#{updateParam.TITLE},
-            AUTHOR=#{updateParam.AUTHOR},
-            CONTENTS=#{updateParam.CONTENTS}
-        where IDX = #{IDX}
+        set title=#{updateParam.title},
+            AUTHOR=#{updateParam.author},
+            CONTENTS=#{updateParam.contents}
+        where IDX = #{idx}
     </update>
     
     <select id="findById" resultType="BoardDto">
         SELECT IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT
         FROM BOARD
-        WHERE IDX = #{IDX}
+        WHERE IDX = #{idx}
     </select>
     
     <delete id="deleteBoard">
-        DELETE FROM BOARD WHERE IDX = #{IDX}
+        DELETE FROM BOARD WHERE IDX = #{idx}
     </delete>
 
-    <insert id="saveBoard" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertBoard"  useGeneratedKeys="true" keyProperty="idx">
         INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR,CREATED_AT)
-        VALUES (#{TITLE}, #{CONTENTS}, #{AUTHOR}, SYSDATE)
+        VALUES (#{title}, #{contents}, #{author}, now())
+
     </insert>
 </mapper>
