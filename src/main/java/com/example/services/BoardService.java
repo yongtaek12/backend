@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public interface BoardService {
 
-    PageInfo<BoardDto> findAll(int offset, int limit);
+    Page<BoardDto> findAll(int offset, int pageSize,  Pageable page);
 
     Optional<BoardDto> findById(Long id);
 
@@ -24,6 +24,8 @@ public interface BoardService {
     void update (Long idx, BoardUpdateDto boardUpdateDto);
 
     void delete (Long id);
+
+    int countBoards();
 
 
 //    Pageable<Map<String, Object>> findAllPaging (Map<String, Object> paramMap, Pageable page);

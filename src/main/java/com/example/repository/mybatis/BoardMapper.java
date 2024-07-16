@@ -17,7 +17,7 @@ public interface BoardMapper {
      * @return 게시글 리스트
      */
 //    List<BoardDto> findAll(Map<String, Object> paramMap);
-    List<BoardDto> findAll(@Param("offset") int offset, @Param("limit") int limit);
+    List<BoardDto> findAll(@Param("offset") int offset, @Param("pageSize") int pageSize);
 
     Optional<BoardDto> findById(Long id);
 

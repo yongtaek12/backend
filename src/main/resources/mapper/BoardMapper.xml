@@ -7,7 +7,7 @@
     <select id="findAll" resultType="BoardDto">
         SELECT IDX, TITLE, CONTENTS, AUTHOR, CREATED_AT
         FROM BOARD
-        LIMIT ${limit} OFFSET #{offset}
+        LIMIT ${offset} OFFSET #{pageSize}
     </select>
 
     <!-- 개수 -->

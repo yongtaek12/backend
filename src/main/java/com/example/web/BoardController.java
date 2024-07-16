@@ -6,7 +6,10 @@ import com.example.web.dtos.BoardDto;
 import com.example.web.dtos.BoardUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,10 +23,10 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board/list")
-    public PageInfo<BoardDto> boardList(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+    public Page<BoardDto> boardList(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize, Pageable page){
 
         log.info("pageIndex ={}, pageSize={}",pageIndex, pageSize );
-        return boardService.findAll(pageIndex, pageSize);
+        return boardService.findAll(pageIndex,pageIndex,page);
     }
 
     @GetMapping("/board/{idx}")

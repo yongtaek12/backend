@@ -7,7 +7,9 @@ import com.example.web.dtos.BoardUpdateDto;
 import com.example.web.dtos.SearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 
@@ -22,14 +24,18 @@ public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
 
     @Override
-    public PageInfo<BoardDto> findAll(int pageIndex, int pageSize) {
+    public Page<BoardDto> findAll(int offset, int pageSize, Pageable page) {
 
         int count = boardMapper.countBoards();
-        log.info("service Impl pageIndex ={}, pageSize={}",pageIndex, pageSize );
-        List<BoardDto> boardDtos = boardMapper.findAll((pageIndex-1) * pageSize, pageSize);
+        offset = (int) page.getOffset();
+        pageSize = page.getPageSize();
+        log.info("service Impl pageIndex ={}, pageSize={}",offset, pageSize );
+        List<BoardDto> boardDtos = boardMapper.findAll(offset, pageSize);
+        int cnt = boardMapper.countBoards();
 
 
-        return  new PageInfo<>(pageIndex, pageSize,count,boardDtos);
+        return new PageImpl<>(boardDtos,page,cnt);
+//        return  new PageInfo<>(pageIndex, pageSize,count,boardDtos);
     }
 
     @Override
@@ -52,5 +58,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void delete(Long idx) {
         boardMapper.deleteBoard(idx);
+    }
+
+    @Override
+    public int countBoards() {
+        return boardMapper.countBoards();
     }
 }
